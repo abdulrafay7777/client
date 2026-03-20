@@ -1,5 +1,5 @@
 // src/components/stat-tile.jsx
-export function StatTile({ label, value, sub, color, icon, pulse }) {
+export function StatTile({ label, value, sub, color, pulse }) {
   // color is a Tailwind class fragment e.g. "threat" | "warn" | "safe" | "info"
   const colorMap = {
     threat: { bar: "bg-threat", text: "text-threat", pulse: "animate-pulse-red" },
@@ -16,7 +16,6 @@ export function StatTile({ label, value, sub, color, icon, pulse }) {
 
       <div className="flex justify-between items-start">
         <span className="text-[12px] text-ink-muted tracking-widest uppercase">{label}</span>
-        {icon && <span className="text-base opacity-60">{icon}</span>}
       </div>
 
       <div className="flex items-end gap-2">
