@@ -1,13 +1,12 @@
 // src/components/sidebar.jsx
 import { useStore } from "../store/ui";
 import { scans } from "../data/mock";
-import { MdDocumentScanner, MdSecurity } from "react-icons/md";
-import { GrOverview } from "react-icons/gr";
+import { MdDocumentScanner, MdSecurity, MdDashboard } from "react-icons/md";
 import { FaHistory } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
 
 const navItems = [
-  { id: "overview", label: "Overview",     icon: <GrOverview />  },
+  { id: "overview", label: "Overview",     icon: <MdDashboard />  }, // Swapped to match your image
   { id: "scan",     label: "Scan File",    icon: <MdDocumentScanner /> },
   { id: "history",  label: "History",      icon: <FaHistory /> },
   { id: "queue",    label: "Review Queue", icon: "◉" },
@@ -16,7 +15,6 @@ const navItems = [
 
 export function Sidebar({ collapsed }) {
   const { page, goTo, toggleSidebar } = useStore();
-  // Assuming 'scans' is imported, otherwise pass as prop
   const queueCount = scans?.filter((s) => s.zone === "SUSPICIOUS").length || 0;
 
   return (
@@ -27,7 +25,7 @@ export function Sidebar({ collapsed }) {
         {/* Mobile Menu Toggle */}
         <button 
           onClick={toggleSidebar}
-          className="lg:hidden p-2 -ml-2 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-raised transition-all outline-none focus-visible:ring-2 focus-visible:ring-info/50"
+          className="lg:hidden p-2 -ml-2 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-raised transition-all outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
           aria-label="Toggle Sidebar"
         >
           <RiMenu2Fill className="text-xl" />
@@ -35,7 +33,7 @@ export function Sidebar({ collapsed }) {
         
         {/* Desktop Brand */}
         <div className="hidden lg:flex items-center gap-3 w-full">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-threat to-warn flex items-center justify-center text-xl shrink-0 shadow-sm border border-white/10">
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-threat to-warn flex items-center justify-center text-xl shrink-0 shadow-sm border border-white/10">
             <MdSecurity className="text-white" />
           </div>
           {!collapsed && (
@@ -55,31 +53,26 @@ export function Sidebar({ collapsed }) {
             <button
               key={item.id}
               onClick={() => goTo(item.id)}
-              /* MODERN UX UPGRADES:
-                1. outline-none: Removes the ugly default browser click ring you saw.
-                2. focus-visible:ring-2: Adds a beautiful, custom ring ONLY when navigating with a keyboard (Accessibility).
-                3. group: Allows us to style the icon separately when the button is hovered.
-                4. rounded-xl: Modern pill shape instead of full-bleed blocks.
-              */
               className={`
-                group relative flex items-center w-full transition-all duration-200 ease-out outline-none focus-visible:ring-2 focus-visible:ring-info/50
-                ${collapsed ? "justify-center rounded-xl p-3" : "justify-between rounded-xl px-3 py-2.5"}
+                group relative flex items-center w-full transition-all duration-200 ease-out outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50
+                overflow-hidden
+                ${collapsed ? "justify-center rounded-xl p-3" : "justify-between rounded-xl py-2.5 pr-3 pl-4"}
                 ${active
-                  ? "bg-info/10 text-info font-medium shadow-sm" // Modern active state: Soft tinted background
-                  : "text-ink-muted hover:bg-raised/50 hover:text-ink-primary"
+                  ? "bg-blue-500/10 text-blue-500 font-medium"
+                  : "text-ink-muted hover:bg-white/5 hover:text-ink-primary"
                 }
               `}
             >
-              {/* Optional: Modern left-edge indicator pill for active state */}
-              {active && !collapsed && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-info rounded-r-full" />
+              {/* The Blue Left Edge Indicator */}
+              {active && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-[60%] bg-blue-500 rounded-r-md shadow-[2px_0_8px_rgba(59,130,246,0.5)]" />
               )}
 
               <span className="flex items-center gap-3">
                 <span className={`text-[18px] transition-transform duration-200 ${active ? "scale-110" : "group-hover:scale-110"}`}>
-                  {item.icon}
+                  {item.icon} 
                 </span>
-                {!collapsed && <span className="text-[14px]">{item.label}</span>}
+                {!collapsed && <span className="text-[14px] tracking-wide">{item.label}</span>}
               </span>
 
               {/* Badges */}

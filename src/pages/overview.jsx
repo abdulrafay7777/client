@@ -36,10 +36,6 @@ export default function Overview() {
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-[24px] font-bold tracking-tight text-ink-primary">Threat Overview</h1>
-          <p className="text-[14px] text-ink-muted mt-1">
-            <span className="animate-blink text-safe text-[10px] mr-2">●</span>
-            Live · <span className="font-mono">{new Date().toLocaleTimeString()}</span>
-          </p>
         </div>
         <div className="hidden md:flex items-center gap-2">
           <span className="text-[12px] text-ink-dim tracking-widest uppercase">System</span>
