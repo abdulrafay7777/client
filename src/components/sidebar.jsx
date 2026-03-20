@@ -1,11 +1,10 @@
 // src/components/sidebar.jsx
 import { useStore } from "../store/ui";
 import { scans } from "../data/mock";
-import { MdDocumentScanner } from "react-icons/md";
+import { MdDocumentScanner, MdSecurity } from "react-icons/md";
 import { GrOverview } from "react-icons/gr";
 import { FaHistory } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
-import { MdSecurity } from "react-icons/md";
 
 const navItems = [
   { id: "overview", label: "Overview",     icon: <GrOverview />  },
@@ -17,77 +16,97 @@ const navItems = [
 
 export function Sidebar({ collapsed }) {
   const { page, goTo, toggleSidebar } = useStore();
-  const queueCount = scans.filter((s) => s.zone === "SUSPICIOUS").length;
+  // Assuming 'scans' is imported, otherwise pass as prop
+  const queueCount = scans?.filter((s) => s.zone === "SUSPICIOUS").length || 0;
 
   return (
-    <aside className="h-screen bg-surface border-r border-edge flex flex-col overflow-hidden w-full">
-
-      {/* Logo / Menu Button */}
-      <div className={`border-b border-edge flex items-center gap-3 ${collapsed ? "justify-center py-4 px-0" : "px-4 py-5"}`}>
-        {/* Menu button - visible only on mobile */}
+    <aside className="h-screen bg-surface border-r border-edge flex flex-col w-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
+      
+      {/* Header / Logo Area */}
+      <div className={`flex items-center gap-3 min-h-[72px] ${collapsed ? "justify-center px-0" : "px-6"}`}>
+        {/* Mobile Menu Toggle */}
         <button 
           onClick={toggleSidebar}
-          className="lg:hidden text-ink-muted hover:text-ink-primary text-xl leading-none transition-colors"
+          className="lg:hidden p-2 -ml-2 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-raised transition-all outline-none focus-visible:ring-2 focus-visible:ring-info/50"
+          aria-label="Toggle Sidebar"
         >
-          <RiMenu2Fill />
+          <RiMenu2Fill className="text-xl" />
         </button>
         
-        {/* Logo - visible only on desktop */}
+        {/* Desktop Brand */}
         <div className="hidden lg:flex items-center gap-3 w-full">
-          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-threat to-warn grid place-items-center text-2xl shrink-0 shadow-lg">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-threat to-warn flex items-center justify-center text-xl shrink-0 shadow-sm border border-white/10">
             <MdSecurity className="text-white" />
           </div>
           {!collapsed && (
-            <div>
-              <p className="font-display text-[15px] font-bold tracking-tight text-ink-primary">SecureAI</p>
-              {/* FIX: Properly formed paragraph tag */}
-              <p className="text-[11px] text-ink-dim">Malware Detection</p> 
+            <div className="flex flex-col">
+              <span className="font-display text-[16px] font-bold tracking-tight text-ink-primary leading-none">SecureAI</span>
+              <span className="text-[12px] font-medium text-ink-dim mt-1 tracking-wide uppercase">Detection Engine</span> 
             </div>
           )}
-        {/* FIX: Properly closed divs and conditions */}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-2 space-y-0.5">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overflow-x-hidden">
         {navItems.map((item) => {
           const active = page === item.id;
           return (
             <button
               key={item.id}
               onClick={() => goTo(item.id)}
+              /* MODERN UX UPGRADES:
+                1. outline-none: Removes the ugly default browser click ring you saw.
+                2. focus-visible:ring-2: Adds a beautiful, custom ring ONLY when navigating with a keyboard (Accessibility).
+                3. group: Allows us to style the icon separately when the button is hovered.
+                4. rounded-xl: Modern pill shape instead of full-bleed blocks.
+              */
               className={`
-                w-full flex items-center gap-2.5 rounded-lg transition-all duration-150
-                ${collapsed ? "justify-center px-0 py-3" : "px-3 py-2.5 justify-between"}
+                group relative flex items-center w-full transition-all duration-200 ease-out outline-none focus-visible:ring-2 focus-visible:ring-info/50
+                ${collapsed ? "justify-center rounded-xl p-3" : "justify-between rounded-xl px-3 py-2.5"}
                 ${active
-                  ? "bg-raised text-ink-primary border-l-2 border-info font-semibold"
-                  : "text-ink-muted hover:bg-raised hover:text-ink-primary border-l-2 border-transparent"
+                  ? "bg-info/10 text-info font-medium shadow-sm" // Modern active state: Soft tinted background
+                  : "text-ink-muted hover:bg-raised/50 hover:text-ink-primary"
                 }
               `}
             >
-              <span className="flex items-center gap-2.5">
-                <span className="text-[15px]">{item.icon}</span>
+              {/* Optional: Modern left-edge indicator pill for active state */}
+              {active && !collapsed && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-info rounded-r-full" />
+              )}
+
+              <span className="flex items-center gap-3">
+                <span className={`text-[18px] transition-transform duration-200 ${active ? "scale-110" : "group-hover:scale-110"}`}>
+                  {item.icon}
+                </span>
                 {!collapsed && <span className="text-[14px]">{item.label}</span>}
               </span>
+
+              {/* Badges */}
               {!collapsed && item.id === "queue" && queueCount > 0 && (
-                <span className="bg-warn text-black text-[12px] font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-warn/10 text-warn border border-warn/20 text-[11px] font-bold px-2 py-0.5 rounded-full shadow-sm">
                   {queueCount}
                 </span>
               )}
               {!collapsed && item.id === "health" && (
-                <span className="bg-warn-dim border border-warn-mid text-warn text-[12px] px-2 py-0.5 rounded-full font-semibold">!</span>
+                <span className="flex items-center justify-center w-5 h-5 bg-warn/10 border border-warn/30 text-warn text-[10px] rounded-full font-bold">
+                  !
+                </span>
               )}
             </button>
           );
         })}
       </nav>
 
-      {/* Footer */}
+      {/* Footer / System Status */}
       {!collapsed && (
-        <div className="border-t border-edge px-4 py-3">
-          <p className="text-[12px] text-ink-dim tracking-widest mb-1 uppercase">Model</p>
-          <p className="text-[13px] text-ink-muted">EMBER Ensemble v1.0</p>
-          <p className="text-[12px] text-ink-dim mt-1">SHAP · Tri-Zone Classifier</p>
+        <div className="m-4 p-4 rounded-xl bg-raised/30 border border-edge/50">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+            <p className="text-[11px] font-semibold text-ink-dim tracking-widest uppercase">System Active</p>
+          </div>
+          <p className="text-[13px] font-medium text-ink-primary">EMBER Ensemble v1.0</p>
+          <p className="text-[12px] text-ink-muted mt-0.5">Tri-Zone Classifier Active</p>
         </div>
       )}
     </aside>
