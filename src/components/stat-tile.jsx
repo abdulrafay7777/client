@@ -2,10 +2,10 @@
 export function StatTile({ label, value, sub, color, icon, pulse }) {
   // color is a Tailwind class fragment e.g. "threat" | "warn" | "safe" | "info"
   const colorMap = {
-    threat: { bar: "bg-threat",  text: "text-threat",  pulse: "animate-pulse-red"   },
-    warn:   { bar: "bg-warn",    text: "text-warn",    pulse: "animate-pulse-amber"  },
-    safe:   { bar: "bg-safe",    text: "text-safe",    pulse: ""                     },
-    info:   { bar: "bg-info",    text: "text-info",    pulse: ""                     },
+    threat: { bar: "bg-threat", text: "text-threat", pulse: "animate-pulse-red" },
+    warn:   { bar: "bg-warn", text: "text-warn", pulse: "animate-pulse-amber" },
+    safe:   { bar: "bg-safe", text: "text-safe", pulse: "" },
+    info:   { bar: "bg-info", text: "text-info", pulse: "" },
   };
   const c = colorMap[color] || colorMap.info;
 

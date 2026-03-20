@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Sidebar } from "./components/sidebar";
-import { Navbar } from "./components/navbar";
 import { ToastStack } from "./components/toast";
 import { useStore } from "./store/ui";
 import Overview from "./pages/overview";
@@ -25,7 +24,6 @@ export default function App() {
         <Sidebar collapsed={!sidebarOpen} />
       </div>
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Navbar />
         <main key={page} className="flex-1 overflow-y-auto animate-fade-up">
           <Page />
         </main>
